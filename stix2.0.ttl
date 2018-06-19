@@ -1,0 +1,625 @@
+@prefix : <http://www.semanticweb.org/sushmitha/ontologies/2018/4/uco_ontology_STIX2_Architecture#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <https://purl.org/stix> .
+
+<https://purl.org/stix> rdf:type owl:Ontology ;
+                         rdfs:comment "An OWL ontology for representing cybersecurity information using the STIX 2 data model." .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  https://purl.org/stix#stixName
+:stixName rdf:type owl:AnnotationProperty ;
+          rdfs:range xsd:string ;
+          rdfs:domain :StixThing .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://www.w3.org/2002/07/owl#topObjectProperty
+owl:topObjectProperty rdfs:domain :Adversary ;
+                      rdfs:range :TTP .
+
+
+###  https://purl.org/stix#attributedTo
+:attributedTo rdf:type owl:ObjectProperty ;
+              rdfs:subPropertyOf :stixObjectProperty ;
+              rdfs:domain [ rdf:type owl:Class ;
+                            owl:unionOf ( :Campaign
+                                          :IntrusionSet
+                                          :ThreatActor
+                                        )
+                          ] ;
+              rdfs:range [ rdf:type owl:Class ;
+                           owl:unionOf ( :Identity
+                                         :IntrusionSet
+                                         :ThreatActor
+                                       )
+                         ] .
+
+
+###  https://purl.org/stix#belongsTo
+:belongsTo rdf:type owl:ObjectProperty ;
+           rdfs:subPropertyOf :stixObjectProperty ;
+           rdfs:domain :ObservedData ;
+           rdfs:range :ASN .
+
+
+###  https://purl.org/stix#createdBy
+:createdBy rdf:type owl:ObjectProperty ;
+           rdfs:subPropertyOf :stixObjectProperty ;
+           rdfs:domain :Campaign ,
+                       :CourseOfAction ,
+                       :Identity ;
+           rdfs:range :Identity ;
+           :stixName "created-by-ref" .
+
+
+###  https://purl.org/stix#derivedFrom
+:derivedFrom rdf:type owl:ObjectProperty ;
+             rdfs:subPropertyOf :stixObjectProperty ;
+             rdfs:domain :StixThing ;
+             rdfs:range :StixThing .
+
+
+###  https://purl.org/stix#duplicateOf
+:duplicateOf rdf:type owl:ObjectProperty ;
+             rdfs:subPropertyOf :stixObjectProperty ;
+             rdf:type owl:SymmetricProperty ,
+                      owl:TransitiveProperty ;
+             rdfs:domain :StixThing ;
+             rdfs:range :StixThing .
+
+
+###  https://purl.org/stix#externalReference
+:externalReference rdf:type owl:ObjectProperty ;
+                   rdfs:subPropertyOf :stixObjectProperty ;
+                   rdfs:domain :StixThing ;
+                   rdfs:range :ExternalReference .
+
+
+###  https://purl.org/stix#hasHash
+:hasHash rdf:type owl:ObjectProperty ;
+         rdfs:subPropertyOf :stixObjectProperty ;
+         rdfs:domain [ rdf:type owl:Class ;
+                       owl:unionOf ( :ExternalReference
+                                     :File
+                                   )
+                     ] ;
+         rdfs:range :Hash .
+
+
+###  https://purl.org/stix#hasPhase
+:hasPhase rdf:type owl:ObjectProperty ;
+          rdfs:subPropertyOf :stixObjectProperty ;
+          owl:inverseOf :phaseOf ;
+          rdfs:domain :KillChain ;
+          rdfs:range :KillChainPhase .
+
+
+###  https://purl.org/stix#impersonates
+:impersonates rdf:type owl:ObjectProperty ;
+              rdfs:subPropertyOf :stixObjectProperty ;
+              rdfs:domain :ThreatActor ;
+              rdfs:range :Identity ;
+              rdfs:comment "This Relationship describes that the Threat Actor impersonates the related Identity. For example, an  impersonates Relationship from the gh0st Threat Actor to the ACME Corp. Identity means that the actor known as gh0st impersonates ACME Corp." .
+
+
+###  https://purl.org/stix#indicates
+:indicates rdf:type owl:ObjectProperty ;
+           rdfs:subPropertyOf :stixObjectProperty ;
+           rdfs:domain :Indicator ;
+           rdfs:range [ rdf:type owl:Class ;
+                        owl:unionOf ( :Adversary
+                                      :TTP
+                                    )
+                      ] .
+
+
+###  https://purl.org/stix#mitigatedBy
+:mitigatedBy rdf:type owl:ObjectProperty ;
+             rdfs:subPropertyOf :stixObjectProperty ;
+             owl:inverseOf :mitigates .
+
+
+###  https://purl.org/stix#mitigates
+:mitigates rdf:type owl:ObjectProperty ;
+           rdfs:subPropertyOf :stixObjectProperty ;
+           rdfs:domain :CourseOfAction ;
+           rdfs:range [ rdf:type owl:Class ;
+                        owl:unionOf ( :TTP
+                                      :Vulnerability
+                                    )
+                      ] .
+
+
+###  https://purl.org/stix#object
+:object rdf:type owl:ObjectProperty ;
+        rdfs:subPropertyOf :stixObjectProperty ;
+        rdfs:domain :StixThing ;
+        rdfs:range :StixThing .
+
+
+###  https://purl.org/stix#phaseOf
+:phaseOf rdf:type owl:ObjectProperty ;
+         rdfs:subPropertyOf :stixObjectProperty ;
+         rdfs:domain :KillChainPhase ;
+         rdfs:range :KillChain .
+
+
+###  https://purl.org/stix#relatedTo
+:relatedTo rdf:type owl:ObjectProperty ;
+           rdfs:subPropertyOf :stixObjectProperty ;
+           rdf:type owl:SymmetricProperty ,
+                    owl:TransitiveProperty ;
+           rdfs:domain :StixThing ;
+           rdfs:range :StixThing .
+
+
+###  https://purl.org/stix#resolvesTo
+:resolvesTo rdf:type owl:ObjectProperty ;
+            rdfs:subPropertyOf :stixObjectProperty ;
+            rdfs:domain :PIAddr ;
+            rdfs:range :MacAddr .
+
+
+###  https://purl.org/stix#sightingOf
+:sightingOf rdf:type owl:ObjectProperty ;
+            rdfs:subPropertyOf :stixObjectProperty ;
+            rdfs:domain :Sighting ;
+            rdfs:range [ rdf:type owl:Class ;
+                         owl:unionOf ( :Adversary
+                                       :Indicator
+                                       :ObservedData
+                                       :TTP
+                                     )
+                       ] .
+
+
+###  https://purl.org/stix#stixObjectProperty
+:stixObjectProperty rdf:type owl:ObjectProperty .
+
+
+###  https://purl.org/stix#targets
+:targets rdf:type owl:ObjectProperty ;
+         rdfs:subPropertyOf :stixObjectProperty ;
+         rdfs:domain [ rdf:type owl:Class ;
+                       owl:unionOf ( :Adversary
+                                     :TTP
+                                   )
+                     ] ;
+         rdfs:range [ rdf:type owl:Class ;
+                      owl:unionOf ( :Identity
+                                    :Vulnerability
+                                  )
+                    ] ;
+         :stixName "targets" .
+
+
+###  https://purl.org/stix#uses
+:uses rdf:type owl:ObjectProperty ;
+      rdfs:subPropertyOf :stixObjectProperty ;
+      rdfs:domain [ rdf:type owl:Class ;
+                    owl:unionOf ( :Adversary
+                                  :TTP
+                                )
+                  ] ;
+      rdfs:range :TTP .
+
+
+###  https://purl.org/stix#variantOf
+:variantOf rdf:type owl:ObjectProperty ;
+           rdfs:subPropertyOf :stixObjectProperty ;
+           rdf:type owl:SymmetricProperty ,
+                    owl:TransitiveProperty ,
+                    owl:IrreflexiveProperty ;
+           rdfs:domain :Malware ;
+           rdfs:range :Malware ;
+           rdfs:comment "This variantOf relation is used to document that one piece of Malware is a variant of another piece of Malware. For example, TorrentLocker is a variant of CryptoLocker." ;
+           :stixName "variant-of" .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  https://purl.org/stix#created
+:created rdf:type owl:DatatypeProperty ;
+         rdfs:subPropertyOf :stixDataProperty .
+
+
+###  https://purl.org/stix#description
+:description rdf:type owl:DatatypeProperty ;
+             rdfs:subPropertyOf :stixDataProperty .
+
+
+###  https://purl.org/stix#hashType
+:hashType rdf:type owl:DatatypeProperty ;
+          rdfs:subPropertyOf :stixDataProperty ;
+          rdfs:domain :Hash .
+
+
+###  https://purl.org/stix#label
+:label rdf:type owl:DatatypeProperty ;
+       rdfs:subPropertyOf :stixDataProperty .
+
+
+###  https://purl.org/stix#mimeType
+:mimeType rdf:type owl:DatatypeProperty ;
+          rdfs:subPropertyOf :stixDataProperty .
+
+
+###  https://purl.org/stix#name
+:name rdf:type owl:DatatypeProperty ;
+      rdfs:subPropertyOf :stixDataProperty ;
+      rdfs:domain :StixThing .
+
+
+###  https://purl.org/stix#path
+:path rdf:type owl:DatatypeProperty ;
+      rdfs:subPropertyOf :stixDataProperty ;
+      rdfs:domain :File .
+
+
+###  https://purl.org/stix#platform
+:platform rdf:type owl:DatatypeProperty ;
+          rdfs:subPropertyOf :stixDataProperty ;
+          rdfs:domain :TTP ;
+          rdfs:range [ rdf:type rdfs:Datatype ;
+                       owl:oneOf [ rdf:type rdf:List ;
+                                   rdf:first "Android" ;
+                                   rdf:rest [ rdf:type rdf:List ;
+                                              rdf:first "Linux" ;
+                                              rdf:rest [ rdf:type rdf:List ;
+                                                         rdf:first "Windows" ;
+                                                         rdf:rest [ rdf:type rdf:List ;
+                                                                    rdf:first "iOS" ;
+                                                                    rdf:rest [ rdf:type rdf:List ;
+                                                                               rdf:first "macOS" ;
+                                                                               rdf:rest rdf:nil
+                                                                             ]
+                                                                  ]
+                                                       ]
+                                            ]
+                                 ]
+                     ] .
+
+
+###  https://purl.org/stix#published
+:published rdf:type owl:DatatypeProperty ;
+           rdfs:subPropertyOf :stixDataProperty .
+
+
+###  https://purl.org/stix#size
+:size rdf:type owl:DatatypeProperty ;
+      rdfs:subPropertyOf :stixDataProperty ;
+      rdfs:domain :File ;
+      rdfs:range xsd:int .
+
+
+###  https://purl.org/stix#skillDescription
+:skillDescription rdf:type owl:DatatypeProperty ;
+                  rdfs:subPropertyOf :stixDataProperty ;
+                  rdfs:domain :CapecSkill .
+
+
+###  https://purl.org/stix#skillLevel
+:skillLevel rdf:type owl:DatatypeProperty ;
+            rdfs:subPropertyOf :stixDataProperty ;
+            rdfs:domain :CapecSkill .
+
+
+###  https://purl.org/stix#specVersion
+:specVersion rdf:type owl:DatatypeProperty ;
+             rdfs:subPropertyOf :stixDataProperty ;
+             rdfs:domain :Bundle ;
+             rdfs:range xsd:string .
+
+
+###  https://purl.org/stix#stixDataProperty
+:stixDataProperty rdf:type owl:DatatypeProperty .
+
+
+###  https://purl.org/stix#stixName
+:stixName rdf:type owl:DatatypeProperty ;
+          rdfs:subPropertyOf :stixDataProperty .
+
+
+###  https://purl.org/stix#type
+:type rdf:type owl:DatatypeProperty ;
+      rdfs:subPropertyOf :stixDataProperty .
+
+
+###  https://purl.org/stix#url
+:url rdf:type owl:DatatypeProperty ;
+     rdfs:subPropertyOf :stixDataProperty .
+
+
+###  https://purl.org/stix#value
+:value rdf:type owl:DatatypeProperty ;
+       rdfs:subPropertyOf :stixDataProperty ;
+       rdfs:domain :StixThing .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  https://purl.org/stix#ASN
+:ASN rdf:type owl:Class ;
+     rdfs:subClassOf :ObservedData .
+
+
+###  https://purl.org/stix#Adversary
+:Adversary rdf:type owl:Class ;
+           rdfs:subClassOf :StixThing .
+
+
+###  https://purl.org/stix#AttackPattern
+:AttackPattern rdf:type owl:Class ;
+               rdfs:subClassOf :TTP .
+
+
+###  https://purl.org/stix#Bundle
+:Bundle rdf:type owl:Class ;
+        rdfs:subClassOf :StixContainer ;
+        rdfs:comment "A Bundle is a collection of arbitrary STIX Objects and Marking Definitions grouped together in a single container. A Bundle does not have any semantic meaning and Objects are not considered related by virtue of being in the same Bundle. Bundle is not STIX Object, so it does not have any of the Common Properties other than the type and id properties. Bundle is transient and implementations should not assume that other implementations will treat it as a persistent object." ;
+        :stixName "bundle" .
+
+
+###  https://purl.org/stix#Campaign
+:Campaign rdf:type owl:Class ;
+          rdfs:subClassOf :Adversary ;
+          rdfs:comment "The CampaignType characterizes  a single cyber threat Campaign."^^xsd:string .
+
+
+###  https://purl.org/stix#CapecObject
+:CapecObject rdf:type owl:Class ;
+             rdfs:subClassOf :StixThing .
+
+
+###  https://purl.org/stix#CapecSkill
+:CapecSkill rdf:type owl:Class ;
+            rdfs:subClassOf :CapecObject .
+
+
+###  https://purl.org/stix#CourseOfAction
+:CourseOfAction rdf:type owl:Class ;
+                rdfs:subClassOf :StixThing .
+
+
+###  https://purl.org/stix#DomainName
+:DomainName rdf:type owl:Class ;
+            rdfs:subClassOf :ObservedData .
+
+
+###  https://purl.org/stix#EmailAddress
+:EmailAddress rdf:type owl:Class ;
+              rdfs:subClassOf :ObservedData .
+
+
+###  https://purl.org/stix#Endpoint
+:Endpoint rdf:type owl:Class ;
+          rdfs:subClassOf :ObservedData .
+
+
+###  https://purl.org/stix#ExternalReference
+:ExternalReference rdf:type owl:Class ;
+                   rdfs:subClassOf :StixThing .
+
+
+###  https://purl.org/stix#File
+:File rdf:type owl:Class ;
+      rdfs:subClassOf :ObservedData .
+
+
+###  https://purl.org/stix#FileName
+:FileName rdf:type owl:Class ;
+          rdfs:subClassOf :ObservedData .
+
+
+###  https://purl.org/stix#FilePath
+:FilePath rdf:type owl:Class ;
+          rdfs:subClassOf :ObservedData .
+
+
+###  https://purl.org/stix#Hash
+:Hash rdf:type owl:Class ;
+      rdfs:subClassOf :StixThing .
+
+
+###  https://purl.org/stix#HashMD5
+:HashMD5 rdf:type owl:Class ;
+         rdfs:subClassOf :Hash .
+
+
+###  https://purl.org/stix#HashSHA-1
+:HashSHA-1 rdf:type owl:Class ;
+           rdfs:subClassOf :Hash .
+
+
+###  https://purl.org/stix#Identity
+:Identity rdf:type owl:Class ;
+          rdfs:subClassOf :StixThing ;
+          rdfs:comment "The Identity field characterizes the identity of this entry"^^xsd:string .
+
+
+###  https://purl.org/stix#Indicator
+:Indicator rdf:type owl:Class ;
+           rdfs:subClassOf :StixThing ;
+           rdfs:comment "Indicators contain a pattern that can be used to detect suspicious or malicious cyber activity. For example, an Indicator may be used to represent a set of malicious domains and use the STIX Patterning Language to specify these domains." .
+
+
+###  https://purl.org/stix#IntrusionSet
+:IntrusionSet rdf:type owl:Class ;
+              rdfs:subClassOf :Adversary .
+
+
+###  https://purl.org/stix#KillChain
+:KillChain rdf:type owl:Class ;
+           rdfs:subClassOf :StixThing .
+
+
+###  https://purl.org/stix#KillChainPhase
+:KillChainPhase rdf:type owl:Class ;
+                rdfs:subClassOf :StixThing .
+
+
+###  https://purl.org/stix#Location
+:Location rdf:type owl:Class ;
+          rdfs:subClassOf :Identity .
+
+
+###  https://purl.org/stix#MacAddr
+:MacAddr rdf:type owl:Class ;
+         rdfs:subClassOf :ObservedData .
+
+
+###  https://purl.org/stix#Malware
+:Malware rdf:type owl:Class ;
+         rdfs:subClassOf :TTP .
+
+
+###  https://purl.org/stix#MarkingDefinition
+:MarkingDefinition rdf:type owl:Class ;
+                   rdfs:subClassOf :StixThing .
+
+
+###  https://purl.org/stix#NetworkTraffic
+:NetworkTraffic rdf:type owl:Class ;
+                rdfs:subClassOf :ObservedData .
+
+
+###  https://purl.org/stix#ObservedData
+:ObservedData rdf:type owl:Class ;
+              rdfs:subClassOf :StixThing ;
+              rdfs:comment "The ObservableType is a complex type representing a description of a single cyber observable."^^xsd:string .
+
+
+###  https://purl.org/stix#Organization
+:Organization rdf:type owl:Class ;
+              rdfs:subClassOf :Identity .
+
+
+###  https://purl.org/stix#PIAddr
+:PIAddr rdf:type owl:Class ;
+        rdfs:subClassOf :ObservedData .
+
+
+###  https://purl.org/stix#Person
+:Person rdf:type owl:Class ;
+        rdfs:subClassOf :Identity .
+
+
+###  https://purl.org/stix#Port
+:Port rdf:type owl:Class ;
+      rdfs:subClassOf :ObservedData .
+
+
+###  https://purl.org/stix#Protocol
+:Protocol rdf:type owl:Class ;
+          rdfs:subClassOf :ObservedData .
+
+
+###  https://purl.org/stix#Relationship
+:Relationship rdf:type owl:Class ;
+              rdfs:subClassOf :StixThing .
+
+
+###  https://purl.org/stix#RelativeTimeExpression
+:RelativeTimeExpression rdf:type owl:Class ;
+                        rdfs:subClassOf :Time .
+
+
+###  https://purl.org/stix#Report
+:Report rdf:type owl:Class ;
+        rdfs:subClassOf :StixContainer ;
+        rdfs:comment "Reports are collections of threat intelligence focused on one or more topics, such as a description of a threat actor, malware, or attack technique, including context and related details. They are used to group related threat intelligence together so that it can be published as a comprehensive cyber threat story." ;
+        :stixName "report" .
+
+
+###  https://purl.org/stix#Sighting
+:Sighting rdf:type owl:Class ;
+          rdfs:subClassOf :StixThing .
+
+
+###  https://purl.org/stix#StixContainer
+:StixContainer rdf:type owl:Class ;
+               rdfs:subClassOf :StixThing .
+
+
+###  https://purl.org/stix#StixThing
+:StixThing rdf:type owl:Class .
+
+
+###  https://purl.org/stix#TTP
+:TTP rdf:type owl:Class ;
+     rdfs:subClassOf :StixThing ;
+     rdfs:comment "TPP is a Tactic, Technique, or Procedure, i.e., behaviors and resources that attackers use to carry out their attacks" .
+
+
+###  https://purl.org/stix#ThreatActor
+:ThreatActor rdf:type owl:Class ;
+             rdfs:subClassOf :Adversary ,
+                             :StixThing .
+
+
+###  https://purl.org/stix#Time
+:Time rdf:type owl:Class ;
+      rdfs:subClassOf :StixThing .
+
+
+###  https://purl.org/stix#TimeExpression
+:TimeExpression rdf:type owl:Class ;
+                rdfs:subClassOf :Time .
+
+
+###  https://purl.org/stix#Tool
+:Tool rdf:type owl:Class ;
+      rdfs:subClassOf :TTP .
+
+
+###  https://purl.org/stix#URL
+:URL rdf:type owl:Class ;
+     rdfs:subClassOf :ObservedData .
+
+
+###  https://purl.org/stix#URLPath
+:URLPath rdf:type owl:Class ;
+         rdfs:subClassOf :ObservedData .
+
+
+###  https://purl.org/stix#UserAgent
+:UserAgent rdf:type owl:Class ;
+           rdfs:subClassOf :ObservedData .
+
+
+###  https://purl.org/stix#Vulnerability
+:Vulnerability rdf:type owl:Class ;
+               rdfs:subClassOf :StixThing ;
+               rdfs:comment "The Vulnerability field identifies and characterizes a Vulnerability as a potential ExploitTarget."^^xsd:string .
+
+
+###  https://purl.org/stix#WindowsRegistry
+:WindowsRegistry rdf:type owl:Class ;
+                 rdfs:subClassOf :ObservedData .
+
+
+###  https://purl.org/stix#ip4Addr
+:ip4Addr rdf:type owl:Class ;
+         rdfs:subClassOf :PIAddr .
+
+
+###  https://purl.org/stix#ip6Addr
+:ip6Addr rdf:type owl:Class ;
+         rdfs:subClassOf :PIAddr .
+
+
+###  Generated by the OWL API (version 4.2.8.20170104-2310) https://github.com/owlcs/owlapi
